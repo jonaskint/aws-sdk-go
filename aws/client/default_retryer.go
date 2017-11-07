@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws/request"
+	"github.com/jonaskint/aws-sdk-go/service/cloudfront"
 )
 
 // DefaultRetryer implements basic retry logic using exponential backoff for
@@ -75,9 +76,13 @@ func (d DefaultRetryer) ShouldRetry(r *request.Request) bool {
 func (d DefaultRetryer) shouldThrottle(r *request.Request) bool {
 	switch r.HTTPResponse.StatusCode {
 	case 429:
+		fallthrough
 	case 502:
+		fallthrough
 	case 503:
+		fallthrough
 	case 504:
+		fallthrough
 	default:
 		return r.IsErrorThrottle()
 	}
